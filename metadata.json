@@ -1,0 +1,5 @@
+{
+  "name": "AI Student Performance Predictor",
+  "description": "A comprehensive student academic performance monitoring and risk prediction system using AI to identify at-risk students based on attendance and marks.",
+  "requestFramePermissions": []
+}

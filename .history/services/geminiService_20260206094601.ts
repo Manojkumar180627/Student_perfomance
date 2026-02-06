@@ -1,14 +1,15 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AcademicData, PredictionResult, RiskLevel } from "../types";
 
-// 🔐 Read API key (Vite browser-safe)
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+// 🔐 Safety check (optional but good)
+if (!import.meta.env.VITE_GEMINI_API_KEY) {
+  throw new Error("Gemini API key missing. Check .env file.");
+}
 
-// ⚠️ Do NOT hard-crash the app if key is missing
-// Instead, allow fallback logic to handle it
-const ai = GEMINI_API_KEY
-  ? new GoogleGenAI({ apiKey: GEMINI_API_KEY })
-  : null;
+// ✅ CORRECT WAY for browser (Vite)
+const ai = new GoogleGenAI({
+  apiKey: import.meta.env.VITE_GEMINI_API_KEY,
+});
 
 export async function predictAcademicRisk(
   data: AcademicData
@@ -40,23 +41,6 @@ export async function predictAcademicRisk(
 
   const riskScore = 100 - performanceScore;
 
-  // 🛟 If API key missing, return safe fallback (NO CRASH)
-  if (!ai) {
-    return {
-      id: "fallback-" + Date.now(),
-      dataId: data.id,
-      riskLevel,
-      riskScore: Math.round(riskScore),
-      performanceScore,
-      summary: `Automated assessment: Performance Score ${performanceScore}%. Risk Level: ${riskLevel}.`,
-      recommendations: [
-        "Immediate academic counseling",
-        "Weekly attendance monitoring",
-        "Targeted subject improvement",
-      ],
-    };
-  }
-
   const systemInstruction = `
 You are a precision academic auditor.
 
@@ -76,10 +60,14 @@ Return:
 - Exactly 3 actionable recommendations
 `;
 
+  const prompt = `
+Generate an academic audit report for this student.
+`;
+
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: "Generate an academic audit report for this student.",
+      contents: prompt,
       config: {
         systemInstruction,
         responseMimeType: "application/json",
@@ -118,6 +106,7 @@ Return:
   } catch (error) {
     console.error("AI Prediction Error:", error);
 
+    // 🛟 Fallback (deploy-safe)
     return {
       id: "fallback-" + Date.now(),
       dataId: data.id,

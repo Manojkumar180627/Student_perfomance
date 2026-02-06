@@ -191,8 +191,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
                         <td className="px-8 py-7">--</td>
                         <td className="px-8 py-7 font-black text-[10px] text-slate-400 uppercase tracking-[0.2em]">{u.department}</td>
                         <td className="px-8 py-7 text-right flex justify-end gap-2">
-                           <button onClick={() => handleStatusChange(u, UserStatus.APPROVED)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-md">Approval</button>
-                           <button onClick={() => handleStatusChange(u, UserStatus.REJECTED)} className="px-6 py-2.5 bg-white border border-rose-200 text-rose-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 transition-all">Reject</button>
+                           <button onClick={() => handleStatusChange(u, UserStatus.APPROVED)} className="px-6 py-2.5 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-md">App</button>
+                           <button onClick={() => handleStatusChange(u, UserStatus.REJECTED)} className="px-6 py-2.5 bg-white border border-rose-200 text-rose-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 transition-all">Deny</button>
                         </td>
                       </tr>
                     ))}
